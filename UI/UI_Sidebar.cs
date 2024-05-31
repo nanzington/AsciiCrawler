@@ -31,7 +31,7 @@ namespace asciiCrawler.UI {
             for (int x = 0; x < 10; x++) {
                 for (int y = 0; y < 10; y++) {
                     if (GameLoop.Map.ContainsKey(new Point(x, y))) {
-                        minimap.Print(x, y, GameLoop.Map[new Point(x, y)].AsCS());
+                        minimap.PrintClickable(x, y, GameLoop.Map[new Point(x, y)].AsCS(), UI_Clicks, x + ";" + y);
                     }
                 }
             } 
@@ -44,6 +44,24 @@ namespace asciiCrawler.UI {
                 minimap.Print(GameLoop.PlayerPos.X, GameLoop.PlayerPos.Y, 25.AsString());
             else if (GameLoop.PlayerFacing == 3)
                 minimap.Print(GameLoop.PlayerPos.X, GameLoop.PlayerPos.Y, 27.AsString());
+        }
+
+
+        public override void UI_Clicks(string ID) {
+            string[] split = ID.Split(";");
+            int x = int.Parse(split[0]);
+            int y = int.Parse(split[1]);
+
+            if (GameLoop.Map.ContainsKey(new Point(x, y))) {
+                Tile tile = GameLoop.Map[new Point(x, y)];
+                tile.IsWall = !tile.IsWall;
+
+                if (tile.IsWall) {
+                    tile.Glyph = '#';
+                } else {
+                    tile.Glyph = '.';
+                }
+            }
         }
     }
 }
